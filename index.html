@@ -78,7 +78,7 @@
         </section>
 
         <section>
-          <div class="quad-outer" style="transform:translateY(-70px);">
+          <div class="quad-outer" style="transform:translateY(-40px);">
             <div class="quad-inner">
               <div>
                 <img class="no-border" src="img/htcdream.jpg" style="max-height:300px"/>
@@ -103,7 +103,7 @@
         </section>
 
         <section>
-          <video height="600" src="vid/pokedroid2.webm" autoplay loop/>
+          <video height="600" src="vid/pokedex1.webm" autoplay loop/>
         </section>
 
         <section>
@@ -129,13 +129,17 @@
         </section>
 
         <section>
-          <iframe width="420" height="315" src="https://www.youtube.com/embed/qnUVGZiLEDo" frameborder="0" allowfullscreen></iframe>
+          <h2>Pokédroid</h2>
+          <ul>
+            <li>440k+ downloads</li>
+            <li>9,700+ reviews</li>
+            <li>4.8 stars</li>
+            <li>Top 10 in category "Entertainment"</li>
+          </ul>
         </section>
 
         <section>
-          <h4>500k downloads</h4>
-          <h4>Top 10 in category "Entertainment"</h4>
-          <h4>DMCA'd in 2011</h4>
+          <iframe width="420" height="315" src="https://www.youtube.com/embed/qnUVGZiLEDo" frameborder="0" allowfullscreen></iframe>
         </section>
 
         <section>
@@ -159,15 +163,11 @@
         -->
 
         <section>
-          <video src="vid/pokedroid1.webm" height="600" autoplay loop></video>
+          <video src="vid/pokedex2.webm" height="600" autoplay loop></video>
         </section>
 
         <section>
           <video src="vid/pokedroid-longer-demo-1.webm" height="600" autoplay loop></video>
-        </section>
-
-        <section>
-          <video src="vid/pokedroid-longer-demo-2.webm" height="600" autoplay loop></video>
         </section>
 
         <section>
@@ -184,12 +184,29 @@
         </section>
 
         <section>
+          <video src="vid/pokedroid-longer-demo-2.webm" height="600" autoplay loop></video>
+        </section>
+
+        <section>
           <h3>3.5MB SQLite database</h3>
           <img class="no-border" src="img/pokedex-sqlite.png" style="max-height:600px"/>
         </section>
 
         <section>
+          <h3>2011: Pokédroid DMCA'd</h3>
+          <ul>
+            <li>Publishing to app store asserts IP ownership</li>
+            <li>Nintendo wary of apps</li>
+            <li>Web sites okay</li>
+          </ul>
+        </section>
+
+        <section>
           <h3>In 2010, you could not build Pokédroid using web technology alone.</h3>
+        </section>
+
+        <section>
+          <img class="no-border" src="img/html5.svg" height="500"/>
         </section>
 
         <section>
@@ -224,7 +241,7 @@
           <h3>2010-present: IndexedDB</h3>
           <ul>
             <li>NoSQL document store</li>
-            <li>Ideas borrowed from WebSQL</li>
+            <li>Ideas borrowed from WebSQL:</li>
             <ul>
               <li>Asynchronous</li>
               <li>Transactional (auto-committing)</li>
@@ -311,7 +328,116 @@
         </section>
 
         <section>
-          <h3>Bad part #3: performance</h3>
+          <h3>Bad part #4: performance</h3>
+        </section>
+
+        <section>
+          <img class="no-border" src="img/twitter-janl.png"/>
+        </section>
+
+        <section>
+          <video height="600" src="vid/idb-blocked.webm" loop autoplay/>
+        </section>
+
+        <section>
+          <h3>Solution: use a web worker</h3>
+        </section>
+
+        <section>
+          <video height="600" src="vid/idb-unblocked.webm" loop autoplay/>
+        </section>
+
+        <section>
+          <h3>IDB in a worker</h3>
+          <ul>
+            <li>Operative.js</li>
+            <li>Catiline.js</li>
+            <li>promise-worker</li>
+            <li>PouchDB "worker" adapter</li>
+          </ul>
+        </section>
+
+        <section>
+          <h3>Gotcha</h3>
+          <h4>No Safari worker support for IDB/WebSQL</h4>
+          <h4>Solution: pseudo-worker</h4>
+        </section>
+
+        <section>
+          <h3>Bad part #4: WKWebView support</h3>
+        </section>
+
+        <section>
+          <h3>WKWebView</h3>
+          <ul>
+            <li class="fragment">Used in hybrid apps: Cordova/PhoneGap/Ionic</li>
+            <li class="fragment">Used in imposter iOS browsers: Chrome/Firefox/Opera</li>
+            <li class="fragment">"Upgrade" to classic UIWebView</li>
+            <li class="fragment">WebSQL unsupported, IDB is Apple's version</li>
+            <li class="fragment">WK stands for "works, kinda"</li>
+          </ul>
+        </section>
+
+        <section>
+          <h3>Solution: FruitDOWN</h3>
+          <ul>
+            <li class="fragment">Implementation of LevelDOWN over IDB</li>
+            <li class="fragment">Works in <em>all</em> IDB impls (including Apple's)</li>
+            <li class="fragment">PouchDB adapter</li>
+            <li class="fragment">Barely performant, gets the job done</li>
+          </ul>
+        </section>
+
+        <section>
+          <h3>Another solution: SQLite Plugin (sigh)</h3>
+          <ul>
+            <li class="fragment">Cordova plugin</li>
+            <li class="fragment">WebSQL-esque impl over native SQLite</li>
+            <li class="fragment">Performance is bad (serialization tax)</li>
+            <li class="fragment">Buggy (doesn't pass Pouch test suite)</li>
+            <li class="fragment">Doesn't fix imposter iOS browsers</li>
+          </ul>
+        </section>
+
+        <section>
+          <h3>WKWebView situation is awful. No good solutions. ¯\_(ツ)_/¯</h3>
+        </section>
+
+        <section>
+          <h3>Where's the good parts?</h3>
+          <img class="no-border" src="img/wtf-jackie-chan.jpg"/>
+        </section>
+
+        <section>
+          <video height="600" loop autoplay src="vid/pokedex_loop.webm"/>
+        </section>
+
+        <section>
+          <h3>Basic tech used</h3>
+          <ul>
+            <li>LocalForage</li>
+            <li>PouchDB</li>
+            <li>Web workers</li>
+            <li>pseudo-worker (Safari)</li>
+          </ul>
+        </section>
+
+        <section>
+          <h3>IndexedDB support is improving</h3>
+          <ul>
+            <li>Safari "modern IDB" rewrite</li>
+            <li>IDB v2 in Chrome/Firefox</li>
+            <li>IE/Edge: use the idb-iegap polyfill</li>
+          </ul>
+        </section>
+
+        <section>
+          <blockquote>IndexedDB has bad parts, but you can work around them to create amazing things.</blockquote>
+          <span style="position:absolute;right:0"><em>– Nolan Lawson</em></span>
+        </section>
+
+        <section>
+          <h2>Thanks!</h2>
         </section>
 
       </div>
