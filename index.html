@@ -4,9 +4,9 @@
 	<head>
 		<meta charset="utf-8">
 
-		<title>Web Workers: I like the way you work it</title>
+		<title>IndexedDB: the good parts</title>
 
-		<meta name="description" content="I like the way you work it: all about Web Workers">
+		<meta name="description" content="IndexedDB: the good parts">
 		<meta name="author" content="Nolan Lawson">
 
 		<meta name="apple-mobile-web-app-capable" content="yes" />
@@ -43,41 +43,12 @@
 		<div class="reveal">
 			<div class="slides">
 				<section>
-          <h2>Web Workers</h2>
-          <h4>I like the way you work it</h4>
-          <div class="pixel-image" style="width:300px;height:200px;background-image: url(img/worker_kirby.png);"></div>
-
+          <h2>IndexedDB: the good parts</h2>
             <h4>@nolanlawson</h4>
-          <div class="footer">
-            <div class="text-muted">Speaker notes are in the dev console!</div>
-          </div>
           <aside class="notes">
             Hi everybody.
           </aside>
         </section>
-
-<!-- TLDR
-
-        <section>
-          <h4>@nolanlawson</h4>
-
-					<img class="no-border" src="img/me.jpg" alt="photo of Nolan Lawson"/>
-					<img style="position:absolute;z-index:9999;left: calc(50% - 292px);bottom:0" class="fragment" src="img/mariko.png" alt="Tweet from Mariko about Japanese sandwich hands"/>
-
-          <aside class="notes">
-            I'm Nolan Lawson. Sometimes I make "here's how big of a sub sandwich I had for lunch" hands, or as Mariko taught me they're called in Japanese, "pottery hands" (ろくろ回す手).
-          </aside>
-        </section>
-
-        <section>
-          <img class="no-border" style="display:inline-block" height="150" src="img/squarespace.jpg" alt="squarespace"/>
-          <img class="no-border" style="display:inline-block" height="150" src="img/pouchdb.png" alt="pouchdb"/>
-          <aside class="notes">
-            I also work at Squarespace, and I help maintain PouchDB.
-          </aside>
-        </section>
-
--->
 
 				<section>
 					<h4>@nolanlawson</h4>
@@ -99,329 +70,169 @@
         </section>
 
         <section>
-          <h3>The web has a problem :(</h3>
-          <aside class="notes">
-            I have to start us off on kind of a dour note, by pointing out that
-            the web has a problem. It's not a new problem – it's actually
-            been around since the beginning of the web, but it's an interesting problem,
-            and it's going to motivate the rest of my talk.
-          </aside>
+          <h3>A story about offline storage</h3>
         </section>
 
         <section>
-          <div>
-            <video height=680 src="vid/kirby_1.webm" loop data-autoplay></video>
-          </div>
-          <aside class="notes">
-            This problem is pretty easy to reproduce. All you need to do is
-            make a web page with an animated gif - just a simple web page!
-
-            Then fire up your dev console and enter some long-running JavaScript
-            operation, like this loop. What you'll notice is that the GIF is
-            blocked for the entirety of the loop.
-
-            You can reproduce this in all the browser, by the way: Chrome, Firefox,
-            Safari, and IE.
-          </aside>
+          <h3>2010: Android was young</h3>
         </section>
 
         <section>
-          <div>
-            <video style="max-width: 100%;" height=680 src="vid/kirby_2.webm" loop data-autoplay></video>
-          </div>
-          <aside class="notes">
-            But it doesn't just affect animated GIFs - it affects almost everything
-            on your page that moves. HTML5 video, JavaScript animations, CSS animations
-            (except for hardware-accelerated ones) will all be stopped.
-
-            In fact, it's worse than that - any form elements on the page will be
-            non-interactive as well. Note that I can't click on any checkboxes or
-            buttons while this is running.
-          </aside>
-        </section>
-
-        <section>
-          <h3>Every line of frontend JS you've ever written has (momentarily) stopped your page from working.</h3>
-          <aside class="notes">
-            Of course, the reason for this is that JavaScript is single-threaded,
-            and the browser environment (i.e. the DOM) is single-threaded. So while
-            JavaScript is running, the browser can't do anything else.
-
-            That's kind of a mind-blowing thought, right? It means that every line of JavaScript you've ever written has (momentarily) stopped your page from working. (Frontend JavaScript, anyway.)
-
-            We should feel humbled by this fact. We have this great responsibility with the JavaScript we use.
-          </aside>
-        </section>
-
-        <section>
-          <div>
-            <video style="max-width: 100%;" height=680 src="vid/kirby_3.webm" loop data-autoplay></video>
-          </div>
-          <aside class="notes">
-            Now, you might not have ever written *such* a long-running JavaScript operation
-            that you blocked the page entirely. But have you ever made or seen a page that looked like this?
-
-            It's functional, but it feels kinda... off. I can interact with the page, but occasionally
-            the scrolling locks up, and the animations might briefly jerk for a few split-seconds. It works, but
-            it doesn't feel *good*.
-
-            Now, this isn't due to one big long-running operation - this is due to lots of little operations
-            that add up over time. It's death by a thousand cuts.
-
-            Why does this happen? Well, we can explain with MATH!
-          </aside>
-        </section>
-
-        <section>
-          <h3>60 frames per second (FPS)</h3>
-          <div>
-            <img class="no-border" src="img/flipbook.gif"/>
-          </div>
-          <aside class="notes">
-            Most monitors will refresh at 60 frames per second. What that means is that,
-            every second, they flash an image 60 times, which gives the illusion of movement. It's just
-            like this flipbook.
-          </aside>
-        </section>
-
-        <section>
-          <h3>1000ms / 60 frames = 16.7ms</h3>
-          <aside class="notes">
-            If you do the math, and divide 1000 milliseconds by 60 frames, you get 16.7 milliseconds.
-            What that means is that, any JavaScript you do has to complete in under 16.7 milliseconds if
-            you want to stay at 60 FPS.
-          </aside>
-        </section>
-
-        <section>
-          <h3>Factor in browser overhead...</h3>
-          <img class="no-border"  src="img/paul_lewis.png" alt="Paul Lewis, 10ms"/>
-          <aside class="notes">
-            If you factor in browser overhead, according to Paul Lewis on the Chrome team, this is actually
-            even smaller. 10ms for all your JavaScript to execute! That's tiny! that's punishingly small!
-
-            And if you think it's bad on desktop, try mobile, where we have slower CPUs.
-          </aside>
-        </section>
-
-        <!-- TLDR
-        <section>
-          <img src="img/jeff_atwood.png" alt="Jeff Atwood, state of JS performance is poor"/>
-          <aside class="notes">It led Jeff Atwood
-            to write this post about how Android phones just aren't fast enough to run Discourse, which is
-            an Ember app. Newer iPhones are barely fast enough, but Android phones just aren't there.
-
-            This is the kind of stuff that leads people to say, "Well, I guess the web's not ready for rich,
-            immersive 60fps mobile apps. We'll have to write an iOS or Android app instead!" But I take exception
-            with that, because I _am_ an Android developer, and I know the tricks that native developers use to
-            milk performance out of a weak CPU.
-          </aside>
-        </section>
-
-        -->
-
-        <section>
-          <div style="display:flex;flex-direction:row;">
-            <div style="min-width:150px;display:flex;justify-content:center;flex-direction:column;">
-              <img class="no-border pixel-image"
-                   style="min-width:150px;flex-grow:0;"
-                   src="img/kirby_star.gif"/>
-            </div>
-            <h2 style="flex-shrink: 1;max-width: 500px;" class="random-color">WEB WORKERS!</h2>
-            <div style="min-width:150px;display:flex;justify-content:center;flex-direction:column;">
-              <img class="no-border pixel-image"
-                   style="min-width:150px;flex-grow:0;"
-                   src="img/kirby_star.gif"/>
-            </div>
-          </div>
-          <aside class="notes">
-            So what are we supposed to do? Well, it turns out the web has a solution to this, and it's called web workers!
-          </aside>
-        </section>
-
-        <section>
-          <div style="display:flex;flex-direction:row;">
-            <div style="flex-grow: 1; flex-shrink: 1">
-          <pre><code class="javascript">// index.js
-
-var worker = new Worker('worker.js');
-worker.postMessage('ping');
-worker.onmessage = function (e) {
-  console.log(e.data); // 'pong'
-};</code></pre>
-            </div>
-
-            <div style="flex-grow: 1; flex-shrink: 1;">
-          <pre><code class="javascript">// worker.js
-
-self.onmessage = function (e) {
-  console.log(e.data); // 'ping'
-  self.postMessage('pong');
-};</code></pre>
-</div>
-          </div>
-          <aside class="notes">
-            I'm not going to go too deep into this code, but a web worker is basically a background thread that you can spawn
-            whenever you want to do a bit of JavaScript work. Anything that runs inside the worker runs on another thread (another
-            process in fact), so it cannot possibly block the DOM.
-          </aside>
-        </section>
-
-        <section>
-          <h3>UI thread (main thread)</h3>
-          <img class="no-border pixel-image" height="400" style="transform: translateY(20px)" src="img/kirby_paint.gif"/>
-          <aside class="notes">
-            See, the way that UIs work, on both the web, Android, and iOS, is that you have one thread, called the main
-            thread, whose responsibility is to respond to UI events like clicks and scrolling, and to paint.
-
-            This UI thread is pretty busy. You'd be busy too, if somebody asked you to paint something every 16 milliseconds!
-            Plus, we're sending down our giant 500KB JavaScript app, which we also expect him to run within those 16 milliseconds.
-          </aside>
-        </section>
-
-        <section>
-          <img class="pixel-image no-border" width="600" src="img/kirby_three_dance.gif"/>
-          <aside class="notes">
-            So what'd be nice, is if the UI thread could spawn some friends to help him out. Then those friends
-            could work independently, and he wouldn't be trying to do so much himself.
-          </aside>
-        </section>
-
-        <!-- TLDR
-
-        <section>
-          <h3>Four cores</h3>
-          <div class="quad-outer" style="transform: translateY(-30px)">
-            <div  class="quad-inner">
-              <div style="width:200px;height:200px;background: url(img/kirby_busy.gif) no-repeat;background-size: 150%;background-position: -50px 10px;" class="no-border pixel-image"></div>
-              <img class="no-border pixel-image" style="transform: translate(0, 65px);"height="200" src="img/kirby_sleep.gif"/>
+          <div class="quad-outer" style="transform:translateY(-70px);">
+            <div class="quad-inner">
+              <div>
+                <img class="no-border" src="img/htcdream.jpg" style="max-height:300px"/>
+              </div>
+              <div>
+                <img class="no-border" src="img/nexus1.jpg" style="max-height:300px"/>
+              </div>
             </div>
             <div class="quad-inner">
-              <img class="no-border pixel-image" style="transform: translate(0, 65px);"height="200" src="img/kirby_sleep.gif"/>
-              <img class="no-border pixel-image" style="transform: translate(0, 65px);"height="200" src="img/kirby_sleep.gif"/>
+              <div>
+                <img class="no-border" src="img/htcmagic.jpg" style="max-height:300px"/>
+              </div>
+              <div>
+                <img class="no-border" src="img/motoroladroid.jpg" style="max-height:300px"/>
+              </div>
             </div>
           </div>
-          <aside class="notes">
-            Now, most phones today have four cores, so if we're only using one core, it looks like this.
-          </aside>
         </section>
 
-        -->
+        <section>
+          <img class="no-border" src="img/pokedroid-store.png" height="650"/>
+        </section>
 
         <section>
-          <h3>Four cores</h3>
-          <div class="quad-outer" style="transform: translateY(-30px)">
-            <div  class="quad-inner">
-              <img class="no-border pixel-image" style="transform: translate(0, 45px);" height="200" src="img/kirby_paint.gif"/>
-              <img class="no-border pixel-image" style="transform: translate(40px, 45px);" height="240" src="img/kirby_fight.gif"/>
+          <video height="600" src="vid/pokedroid2.webm" autoplay loop/>
+        </section>
+
+        <section>
+          <div class="quad-outer" style="transform:translateY(-70px);">
+            <div class="quad-inner">
+              <div>
+                <video src="vid/pokedroid-demo-1.webm" autoplay loop/>
+              </div>
+              <div>
+                <video src="vid/pokedroid-demo-3.webm" autoplay loop/>
+              </div>
             </div>
-            <div  class="quad-inner">
-              <img class="no-border pixel-image" height="120" src="img/kirby_spin_dance.gif"/>
-              <img class="no-border pixel-image"  style="transform: translate(0, 5px);"height="200" src="img/kirby_run.gif"/>
+
+            <div class="quad-inner">
+              <div>
+                <video src="vid/pokedroid-demo-4.webm" autoplay loop/>
+              </div>
+              <div>
+                <video src="vid/pokedroid-demo-2.webm" autoplay loop/>
+              </div>
             </div>
           </div>
-          <aside class="notes">
-            This is great, because we can actually spawn as many workers as we want, and even low-end Android phones sold
-            today have 4 cores. So potentially we can do many things at once, in addition to the UI.
-
-            When we want to do something that's unrelated to UI - business logic, reading from local storage, talking to the
-            network, we shove that off in a background thread.
-          </aside>
         </section>
 
-
-        <!-- TLDR
-
         <section>
-          <img src="img/caniuse_webworkers.png" alt="caniuse.com page for web workers"/>
-          <aside class="notes">
-            Web worker support is very good.
-          </aside>
+          <iframe width="420" height="315" src="https://www.youtube.com/embed/qnUVGZiLEDo" frameborder="0" allowfullscreen></iframe>
         </section>
-        -->
 
         <section>
-         <h3>Web Workers can do...</h3>
+          <h4>500k downloads</h4>
+          <h4>Top 10 in category "Entertainment"</h4>
+          <h4>DMCA'd in 2011</h4>
+        </section>
+
+        <section>
+          <h3>Why was Pokédroid so popular?</h3>
+        </section>
+
+        <section>
+          <h3>Many alternatives on the web</h3>
           <ul>
-            <li class="fragment">Ajax</li>
-            <li class="fragment">IndexedDB</li>
-            <li class="fragment">Anything JS can do</li>
-            <li class="fragment">...but not DOM</li>
-            <li class="fragment">Virtual DOM!</li>
+            <li>Bulbapedia</li>
+            <li>Marriland</li>
+            <li>Serebii</li>
+            <li>GameFAQs</li>
           </ul>
-          <aside class="notes">
-            So what can you do inside of a web worker? Well, you have ajax and IndexedDB, and like I said,
-            those actually *can* block the DOM, so it's worthwhile to put them in a web worker. You can also
-            do any normal JS operations, except for the DOM. But hey, you can do Virtual DOM, right?
-          </aside>
+        </section>
+
+        <!--
+        <section>
+          <iframe width="420" height="315" src="https://www.youtube.com/embed/Re73QNJ9p9Q" frameborder="0" allowfullscreen></iframe>
+        </section>
+        -->
+
+        <section>
+          <video src="vid/pokedroid1.webm" height="600" autoplay loop></video>
         </section>
 
         <section>
-          <div>
-            <video height=680 src="vid/pokedex_loop.webm" loop data-autoplay></video>
-          </div>
-          <aside class="notes">
-            So I experimented with this, and I demonstrated that it's possible. I wrote an app
-            with an architecture where every UI event basically gets fired off as an action to the web worker.
-            Inside the web worker, it generates the Virtual DOM tree, diffs it with the previous tree, and then
-            sends the patch (i.e. the minimal set of operations to be applied to the DOM) back to the main thread.
-            </aside>
+          <video src="vid/pokedroid-longer-demo-1.webm" height="600" autoplay loop></video>
         </section>
 
         <section>
-          <img src="img/pokedex_architecture.png" alt="pokedex.org virtual dom architecture"/>
-          <aside class="notes">
-            This is great that the patch tends to be small, because the *only* cost you pay with a web worker on the main
-            thread is the cost of serializing and de-serializing the messages sent back and forth with the worker.
-          </aside>
+          <video src="vid/pokedroid-longer-demo-2.webm" height="600" autoplay loop></video>
         </section>
 
         <section>
-          <h3>Pokedex.org on a 2011 Galaxy Nexus</h3>
-          <div style="transform: translateY(-50px)">
-            <video height=680 src="vid/pokedex.webm" loop data-autoplay></video>
-          </div>
-          <aside class="notes">
-            This works surprisingly well. Here's my Pokedex.org app running on a 2011-era Galaxy Nexus phone.
-            It runs at 60fps, and is nearly indistinguishable from a native app. On newer Android phones, it
-            *is* indistinguishable from a native app.
-          </aside>
+          <h4>What Pokédroid had that no others had:</h4>
+          <h2>OFFLINE!</h2>
         </section>
 
         <section>
-          <h3>React with Web Workers</h3>
-          <div style="transform: translateY(-50px)">
-            <video height=680 src="vid/react_worker.webm" loop data-autoplay></video>
-          </div>
-          <aside class="notes">
-            And if you still don't believe me, there was a blog post recently where Parashuram demonstrates that you can run
-            React's virtual DOM inside of a web worker, and he actually demonstrated that this resulted in a better framerate than
-            when you don't use a worker.
-          </aside>
+          <blockquote>
+            It's so nice to be able to be <strong>on the road</strong> playing Pokémon
+            and having a <strong>quick</strong> reference without all the large guidebooks.
+          </blockquote>
+          <span style="right: 0;position: absolute;"><br/><em>– Google Play review</em></span>
         </section>
 
         <section>
-          <h2 class="random-color">Thank you!</h2>
-          <img class="no-border pixel-image" style="display:block" width="100" src="img/kirby_expedition.gif"/>
-          <h4 style="margin-top: 10px !important">nolanlawson.github.io/brooklynjs-2016-02</h4>
-          <ul style="font-size: 18px !important;line-height:20px !important;">
-            <li><a href="demo1.html">First demo</a></li>
-            <li><a href="demo2.html">Second demo</a></li>
-            <li><a href="https://vimeo.com/125121010">Paul Lewis on Making a Silky Smooth Web</a></li>
-            <li><a href="https://meta.discourse.org/t/the-state-of-javascript-on-android-in-2015-is-poor/33889">The State of JavaScript on Android in 2015 is… poor</a> </li>
-            <li><a href="http://www.pocketjavascript.com/blog/2015/11/23/introducing-pokedex-org">Introducing Pokedex.org: a progressive webapp for Pokémon fans</a></li>
-            <li><a href="http://blog.nparashuram.com/2015/12/react-web-worker-renderer.html">React Custom Renderer using Web Workers</a></li>
-            <li><a href="http://blog.nparashuram.com/2016/02/using-webworkers-to-make-react-faster.html">Using Webworkers to make React faster </a></li>
+          <h3>3.5MB SQLite database</h3>
+          <img class="no-border" src="img/pokedex-sqlite.png" style="max-height:600px"/>
+        </section>
+
+        <section>
+          <h3>In 2010, you could not build Pokédroid using web technology alone.</h3>
+        </section>
+
+        <section>
+          <h3>2009: LocalStorage API</h3>
+          <ul>
+            <li>Capped at 5MB</li>
+            <li>Strings only</li>
+            <li>Synchronous</li>
+            <li>Key-value only</li>
           </ul>
-          <aside class="notes">
-            This think this stuff is going to start popping up in frameworks. It's already going to appear in Angular 2, which is
-            where I got the idea. But you can use web workers yourself today. The APIs are very easy to work with, and there are
-            polyfills.
-
-            So if you have any JavaScript on your frontend that can run in a worker, please consider throwing it in a worker! Your
-            framerate will improve, and your users will thank you. Thanks!
-          </aside>
+          <div style="margin-top:20px;">
+            <small class="text-muted">https://hacks.mozilla.org/2009/06/localstorage/</small>
+          </div>
         </section>
+
+        <section>
+          <h3>2007-2010: WebSQL Database API</h3>
+          <ul>
+            <li>Thin layer on SQLite</li>
+            <li>Asynchronous</li>
+            <li>Potentially unlimited storage</li>
+            <li>Killed by Mozilla and Microsoft</li>
+          </ul>
+          <div style="margin-top:20px;">
+            <small class="text-muted">
+              http://html5doctor.com/introducing-web-sql-databases
+              <br/>https://webkit.org/blog/126/webkit-does-html5-client-side-database-storage</small>
+          </div>
+        </section>
+
+        <section>
+          <h3>2010-present: IndexedDB</h3>
+          <ul>
+            <li>NoSQL document store</li>
+            <li>Ideas borrowed from WebSQL</li>
+            <ul>
+              <li>Asynchronous</li>
+              <li>Transactional (auto-committing)</li>
+              <li>Security (per origin)</li>
+            </ul>
+          </ul>
+        </section>
+
       </div>
 		</div>
 
