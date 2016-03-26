@@ -234,12 +234,86 @@
         </section>
 
         <section>
-          <img class="no-border" src="img/twitter-mikeal"/>
+          <h3>2010-present: IndexedDB (cont.)</h3>
+          <ul>
+            <li>Storage engine agnostic</li>
+            <ul>
+              <li>Chrome: LevelDB</li>
+              <li>IE/Edge: JetDB</li>
+              <li>Firefox: SQLite</li>
+              <li>Safari: SQLite (different impl.)</li>
+            </ul>
+          </ul>
         </section>
 
         <section>
-          <img class="no-border" src="img/twitter-rem"/>
+          <h3>Bad parts</h3>
         </section>
+
+        <section>
+          <h3>Bad part #1: the API</h3>
+        </section>
+
+        <section>
+          <img class="no-border" src="img/twitter-mikeal.png"/>
+        </section>
+
+        <section>
+          <img class="no-border" src="img/idb-api.png"/>
+        </section>
+
+        <section>
+          <h4>Solution: use a wrapper</h4>
+          <ul>
+            <li>Dexie</li>
+            <li>LocalForage</li>
+            <li>PouchDB</li>
+            <li>YDN-DB</li>
+            <li>indexeddb-promised</li>
+          </ul>
+        </section>
+
+        <section>
+          <h4>Dexie</h4>
+          <img class="no-border" src="img/dexie.png"/>
+        </section>
+
+        <section>
+          <h3>Bad part #2: browser support</h3>
+        </section>
+
+        <section>
+          <img class="no-border" src="img/twitter-rem.png"/>
+        </section>
+
+        <section>
+          <img class="no-border" src="img/caniuse-idb.png"/>
+        </section>
+
+        <section>
+          <h4>Solution: use a wrapper</h4>
+          <ul>
+            <li>PouchDB</li>
+            <li>LocalForage</li>
+            <li>YDN-DB</li>
+            <li>Dexie w/ IndexedDBShim</li>
+          </ul>
+        </section>
+
+        <section>
+          <h4>PouchDB support</h4>
+          <img class="no-border" src="img/pouchdb-support.png"/>
+        </section>
+
+        <section>
+          <h4>PouchDB blob support</h4>
+          <img class="no-border" src="img/pouchdb-blob-support.png"/>
+        </section>
+
+        <section>
+          <h3>Bad part #3: performance</h3>
+        </section>
+
       </div>
 		</div>
 
