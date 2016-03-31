@@ -156,16 +156,22 @@
           </ul>
         </section>
 
+				<section>
+					<iframe width=800 height=600 src="http://bulbapedia.bulbagarden.net/wiki/Pikachu_(Pok%C3%A9mon)">
+					</iframe>
+				</section>
+
         <!--
         <section>
           <iframe width="420" height="315" src="https://www.youtube.com/embed/Re73QNJ9p9Q" frameborder="0" allowfullscreen></iframe>
         </section>
         -->
 
+<!--
         <section>
           <video src="vid/pokedex2.webm" height="600" autoplay loop></video>
         </section>
-
+-->
         <section>
           <video src="vid/pokedroid-longer-demo-1.webm" height="600" autoplay loop></video>
         </section>
@@ -202,7 +208,7 @@
         </section>
 
         <section>
-          <h3>In 2010, you could not build Pokédroid using web technology alone.</h3>
+          <h3>In 2011, you could not build Pokédroid using web technology alone.</h3>
         </section>
 
         <section>
@@ -212,10 +218,10 @@
         <section>
           <h3>2009: LocalStorage API</h3>
           <ul>
-            <li>Capped at 5MB</li>
-            <li>Strings only</li>
-            <li>Synchronous</li>
-            <li>Key-value only</li>
+						<li class="fragment">Strings only</li>
+						<li class="fragment">Synchronous</li>
+						<li class="fragment">Key-value only</li>
+						<li class="fragment">Capped at 5MB</li>
           </ul>
           <div style="margin-top:20px;">
             <small class="text-muted">https://hacks.mozilla.org/2009/06/localstorage/</small>
@@ -227,7 +233,7 @@
           <ul>
             <li>Thin layer on SQLite</li>
             <li>Asynchronous</li>
-            <li>Potentially unlimited storage</li>
+            <li>Nearly unlimited storage</li>
             <li>Killed by Mozilla and Microsoft</li>
           </ul>
           <div style="margin-top:20px;">
@@ -241,9 +247,10 @@
           <h3>2010-present: IndexedDB</h3>
           <ul>
             <li>NoSQL document store</li>
-            <li>Ideas borrowed from WebSQL:</li>
+            <li>Many ideas borrowed from WebSQL:</li>
             <ul>
               <li>Asynchronous</li>
+							<li>Nearly unlimited storage</li>
               <li>Transactional (auto-committing)</li>
               <li>Security (per origin)</li>
             </ul>
@@ -359,8 +366,10 @@
 
         <section>
           <h3>Gotcha</h3>
-          <h4>No Safari worker support for IDB/WebSQL</h4>
-          <h4>Solution: pseudo-worker</h4>
+          <ul>
+					<li>No Safari worker support for IDB/WebSQL</li>
+          <li>Solution: pseudo-worker</li>
+					</ul>
         </section>
 
         <section>
@@ -423,7 +432,13 @@
         </section>
 
         <section>
-          <h3>IndexedDB support is improving</h3>
+					<h3>Pokédex IDB</h3>
+					<h4>4.0M Chrome / 5.6M Firefox</h4>
+					<img class="no-border" src="img/pokedex-idb.png" height="600"/>
+				</section>
+
+        <section>
+          <h3>IndexedDB: rosy future</h3>
           <ul>
             <li>Safari "modern IDB" rewrite</li>
             <li>IDB v2 in Chrome/Firefox</li>
@@ -438,6 +453,39 @@
 
         <section>
           <h2>Thanks!</h2>
+					<h4>https://nolanlawson.github.io/offlinefirst-2016-03</h4>
+					<ul style="font-size: 18px !important;line-height:20px !important;">
+						<li>
+							<a href="http://nolanlawson.com/2011/05/26/on-pokedroids-removal/">
+								On Pokédroid's removal
+							</a>
+						</li>
+						<li>
+							<a href="https://pouchdb.com/2014/10/26/10-things-i-learned-from-reading-and-writing-the-pouchdb-source.html">
+								10 things I learned from reading and writing the PouchDB source
+							</a>
+						</li>
+						<li>
+							<a href="http://www.raymondcamden.com/2014/09/25/IndexedDB-on-iOS-8-Broken-Bad/">
+								IndexedDB on iOS 8: broken bad
+							</a>
+						</li>
+						<li>
+							<a href="http://nolanlawson.com/2015/09/29/indexeddb-websql-localstorage-what-blocks-the-dom/">
+                IndexedDB, WebSQL, LocalStorage – what blocks the DOM?
+              </a>
+					  </li>
+						<li>
+							<a href="http://www.pocketjavascript.com/blog/2015/11/23/introducing-pokedex-org">
+								Introducing Pokedex.org: a progressive webapp for Pokémon fans
+							</a>
+						</li>
+						<li>
+						  <a href="http://nolanlawson.com/2016/02/08/how-to-think-about-databases/">
+								How to think about databases
+							</a>
+					  </li>
+					</ul>
         </section>
 
       </div>
